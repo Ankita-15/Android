@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <MaterialEditText
+            android:id="@+id/edtEmail"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </MaterialEditText>
+
+        <MaterialEditText
+            android:id="@+id/edtPassword"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textSize="20sp"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </MaterialEditText>
+
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
