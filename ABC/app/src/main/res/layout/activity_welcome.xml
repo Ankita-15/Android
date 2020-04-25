@@ -9,21 +9,78 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="417dp"
-        android:layout_height="50dp"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="34dp"
+        app:cardCornerRadius="7dp"
         app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <fragment
-            android:id="@+id/autocomplete_fragment"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:hint="Enter Source"
+            android:inputType="textPersonName"
+            android:paddingLeft="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/button1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.666" />
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="50dp"
+            android:ems="10"
+            android:hint="Enter destination"
+            android:inputType="textPersonName"
+            android:paddingLeft="5dp" />
+
+        <ImageButton
+            android:id="@+id/button1"
+            android:layout_width="40dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="300dp"
+            android:background="#DCFFFFFF"
+            android:src="@drawable/places_ic_search" />
+
+        <ImageButton
+            android:id="@+id/button2"
+            android:layout_width="43dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="300dp"
+            android:layout_marginTop="50dp"
+            android:background="#D3FFFFFF"
+            android:src="@drawable/places_ic_search" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/destination" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/start" />
 
 
     </androidx.cardview.widget.CardView>
@@ -31,8 +88,8 @@
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="410dp"
-        android:layout_height="583dp"
+        android:layout_width="412dp"
+        android:layout_height="654dp"
         android:layout_below="@id/cardView"
         android:layout_marginTop="-2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,33 +97,37 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.346"
+        app:layout_constraintVertical_bias="0.0"
         tools:context=".Welcome" />
 
     <Button
         android:id="@+id/request_ride"
-        android:layout_width="414dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_alignBottom="@id/map"
-        android:layout_marginBottom="-54dp"
+        android:enabled="false"
         android:onClick="requestRide"
         android:text="REQUEST RIDE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.099"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/map"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.555" />
 
     <Button
         android:id="@+id/logout"
-        android:layout_width="402dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="153dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="12dp"
         android:onClick="logout"
         android:text="LOGOUT"
-        app:layout_constraintTop_toBottomOf="@+id/request_ride"
-        tools:layout_editor_absoluteX="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.925"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
