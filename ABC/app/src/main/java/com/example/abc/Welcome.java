@@ -17,6 +17,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -46,9 +49,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class Welcome extends FragmentActivity implements OnMapReadyCallback {
 
@@ -58,6 +64,12 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
 
+    ArrayList markerPoints= new ArrayList();
+    ImageButton button1,button2;
+    EditText searchSource,searchDestination;
+    private FusedLocationProviderClient mLocationClient;
+    LatLng source,destination;
+    Polyline route;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,44 +79,65 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
         //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
         //   .findFragmentById(R.id.map);
         // mapFragment.getMapAsync(this);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        searchSource = findViewById(R.id.editText);
+        searchDestination = findViewById(R.id.editText2);
+        mLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        //mMap.setMyLocationEnabled(true);
         fetchLocation();
 
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyCRedcX80cUN0eUug3UC3-dY-vckf3Zryg");
-        }
-        PlacesClient placesClient = Places.createClient(this);
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
-
-        // autocompleteFragment.setLocationBias(RectangularBounds.newInstance(new LatLng(-33.880490,151.184363),new LatLng(-33.858754,151.229596)));
-        // autocompleteFragment.setCountries("IN");
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
-
-// Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                final LatLng latlng = place.getLatLng();
+            public void onClick(View v) {
+                String locationName = searchSource.getText().toString();
+                Geocoder geocoder = new Geocoder(Welcome.this, Locale.getDefault());
+                try {
+                    List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
+                    if (addressList.size() > 0) {
+                        Address address = addressList.get(0);
+                        source = new LatLng(address.getLatitude(), address.getLongitude());
+                        markerPoints.add(source);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12.0f));
+                        //Toast.makeText(Welcome.this, address.getLocality(), Toast.LENGTH_SHORT).show();
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(), address.getLongitude())).title("Pickup here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        set_ride();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                Log.i("", "Place: " + place.getName() + ", " + place.getId());
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i("", "An error occurred: " + status);
             }
         });
 
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String locationName = searchDestination.getText().toString();
+                Geocoder geocoder = new Geocoder(Welcome.this, Locale.getDefault());
+                try {
+                    List<Address> addressList = geocoder.getFromLocationName(locationName, 1);
+                    if (addressList.size() > 0) {
+                        Address address = addressList.get(0);
+                        destination = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(source).title("Pickup here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        markerPoints.add(destination);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12.0f));
+                        //Toast.makeText(Welcome.this, address.getLocality(), Toast.LENGTH_SHORT).show();
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(), address.getLongitude())).title("Your destination").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        set_ride();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
     }
 
@@ -174,6 +207,7 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         String add = getAddress(currentLocation.getLatitude(), currentLocation.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(add);
+        searchSource.setText(add);
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
         googleMap.addMarker(markerOptions);
@@ -193,6 +227,14 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
         return;
     }
 
+    public void set_ride()
+    {
+        if(source!=null && destination!=null)
+            findViewById(R.id.request_ride).setEnabled(true);
+
+    }
+
+
 
     public void logout(View view){
         FirebaseAuth.getInstance().signOut();
@@ -201,6 +243,6 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
     }
 
     public void requestRide(View view){
-        startActivity(new Intent(getApplicationContext(),Rides.class));
+        startActivity(new Intent(getApplicationContext(),AvailableDrivers.class));
     }
 }
