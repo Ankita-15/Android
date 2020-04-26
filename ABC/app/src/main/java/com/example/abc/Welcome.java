@@ -26,8 +26,8 @@ import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
+//import com.google.android.gms.location.places.GeoDataClient;
+//import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,13 +37,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+//import com.google.android.libraries.places.api.Places;
+//import com.google.android.libraries.places.api.model.Place;
+//import com.google.android.libraries.places.api.model.RectangularBounds;
+//import com.google.android.libraries.places.api.model.TypeFilter;
+//import com.google.android.libraries.places.api.net.PlacesClient;
+//import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+//import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -129,6 +129,7 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12.0f));
                         //Toast.makeText(Welcome.this, address.getLocality(), Toast.LENGTH_SHORT).show();
                         mMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(), address.getLongitude())).title("Your destination").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        draw_route(source,destination);
                         set_ride();
                     }
 
@@ -137,7 +138,8 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
                 }
 
             }
-        });
+        });//button2
+
 
     }
 
@@ -178,14 +180,16 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
             add = obj.getAddressLine(0);
-            add = add + "\n" + obj.getCountryName();
-            add = add + "\n" + obj.getCountryCode();
-            add = add + "\n" + obj.getAdminArea();
-            add = add + "\n" + obj.getPostalCode();
-            add = add + "\n" + obj.getSubAdminArea();
-            add = add + "\n" + obj.getLocality();
-            add = add + "\n" + obj.getSubThoroughfare();
+            //System.out.println(add);
+            //add =add+";"+obj.getSubAdminArea();
+            // add = obj.getLocality();
+            //add = add + ";" + obj.getAdminArea();
+            //add = add + ";" + obj.getCountryName();
+            //add = add + "\n" + obj.getCountryCode();
 
+            //add = add + "\n" + obj.getPostalCode();
+
+            //add = add + "\n" + obj.getSubThoroughfare();
 
             //Log.v("IGA", "Address" + add);
             // Toast.makeText(this, "Address=>" + add,
@@ -213,7 +217,11 @@ public class Welcome extends FragmentActivity implements OnMapReadyCallback {
         googleMap.addMarker(markerOptions);
     }
 
-@SuppressLint("Missing Permission")
+    public void draw_route(LatLng S,LatLng D)
+    {
+
+    }
+    @SuppressLint("Missing Permission")
     @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
